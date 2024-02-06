@@ -1,0 +1,7 @@
+pytest == 8.0.0
+selene == 2.0.0rc7
+allure-pytest == 2.13.2
+python-dotenv == 1.0.1
+curlify == 2.2.1
+requests == 2.31.0
+python-dotenv == 1.0.1
