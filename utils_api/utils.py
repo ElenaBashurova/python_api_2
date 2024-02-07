@@ -1,4 +1,3 @@
-import json
 import logging
 import allure
 import curlify
@@ -6,10 +5,6 @@ import requests
 from allure_commons._allure import step
 from allure_commons.types import AttachmentType
 
-
-def load_schema(path=""):
-    with open(path) as file:
-        return json.loads(file.read())
 
 
 def post_reqres(url, **kwargs):

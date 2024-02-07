@@ -7,7 +7,7 @@ from selene import browser, have, be
 from utils_api.utils import post_reqres
 
 
-def test_login(setup_browser):
+def test_login():
     with step("Authorization with API"):
         response = post_reqres("/login", json={"Email": LOGIN, "Password": PASSWORD}, allow_redirects=False)
     cookie = response.cookies.get("NOPCOMMERCE.AUTH")
@@ -26,7 +26,7 @@ def test_add_product():
     logging.info(cookie)
     browser.open(API_URL)
     browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": cookie})
-    with step("Open main page with authorized user"):
+    with step("Add product in card API"):
         post_reqres("/addproducttocart/details/74/1",
                     data={
                         "addtocart_74.EnteredQuantity": 1})
@@ -38,3 +38,19 @@ def test_add_product():
         browser.element('.product-box-add-to-cart-button').click()
         browser.element(".product-name").should(have.text('Build your own cheap computer'))
 
+
+def test_add_product_with_verification():
+    response = post_reqres("/login", json={"Email": LOGIN, "Password": PASSWORD}, allow_redirects=False)
+    cookie = response.cookies.get("NOPCOMMERCE.AUTH")
+    logging.info(cookie)
+    browser.open(API_URL)
+    browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": cookie})
+    with step("Add product in card API"):
+        post_reqres("/addproducttocart/details/31/1",
+                    data={"addtocart_31.EnteredQuantity": 1})
+    cookie = response.cookies.get("NOPCOMMERCE.AUTH")
+    logging.info(cookie)
+    assert response.status_code == 302
+    with step("Check product in card"):
+        browser.open(f"{API_URL}/cart")
+        browser.element('.product-name').should(have.text("14.1-inch Laptop"))
